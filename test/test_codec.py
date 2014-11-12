@@ -1,16 +1,26 @@
+# coding: utf-8
+
 import pytest
 
 
 @pytest.fixture
 def codec():
     import gsm0338
-    print gsm0338.codecs
     return gsm0338.Codec()
 
 
-def test_decode(codec):
-    assert codec.decode('\x00\x41\x42\x43') == (u'@ABC', 4)
+GSM_BASIC_CHARACTER_SET = "".join(map(chr, range(27) + range(28, 128)))
+UNICODE_BASIC_CHARACTER_SET = u"@£$¥èéùìòÇ\nØø\rÅåΔ_ΦΓΛΩΠΨΣΘΞÆæßÉ" \
+                              u" !\"#¤%&'()*+,-./0123456789:;<=>?¡" \
+                              u"ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÑÜ§¿" \
+                              u"abcdefghijklmnopqrstuvwxyzäöñüà"
 
 
-def test_encode(codec):
-    assert codec.encode(u'@ABC') == ('\x00\x41\x42\x43', 4)
+class TestCodec:
+    def test_decode_basic_character_set(self, codec):
+        assert codec.decode(GSM_BASIC_CHARACTER_SET) == \
+            (UNICODE_BASIC_CHARACTER_SET, len(GSM_BASIC_CHARACTER_SET))
+
+    def test_encode_basic_character_set(self, codec):
+        assert codec.encode(UNICODE_BASIC_CHARACTER_SET) == \
+            (GSM_BASIC_CHARACTER_SET, len(GSM_BASIC_CHARACTER_SET))
