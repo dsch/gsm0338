@@ -8,10 +8,27 @@ __all__ = ["Codec"]
 class Codec(codecs.Codec):
 
     def encode(self, input, errors='strict'):
-        return codecs.charmap_encode(input, errors, encoding_map)
+        buffer = ""
+        for c in input:
+            num = encoding_map[ord(c)]
+            if num & 0xff00:
+                buffer += '\x1b'
+            buffer += chr(num & 0xff)
+        return (buffer, len(buffer))
 
     def decode(self, input, errors='strict'):
-        return codecs.charmap_decode(input, errors, decoding_map)
+        buffer = u""
+        num = 0
+        for c in input:
+            num |= ord(c)
+            print num
+            if num == 0x1b:
+                num <<= 8
+                continue
+
+            buffer += unichr(decoding_map[num])
+            num = 0
+        return (buffer, len(buffer))
 
 
 class IncrementalEncoder(codecs.IncrementalEncoder):
@@ -95,18 +112,17 @@ decoding_map.update({
     0x7D: 0x00F1,  # LATIN SMALL LETTER N WITH TILDE
     0x7E: 0x00FC,  # LATIN SMALL LETTER U WITH DIAERESIS
     0x7F: 0x00E0,  # LATIN SMALL LETTER A WITH GRAVE
+    0x1B0A: 0x000C,  # FORM FEED
+    0x1B14:	0x005E,  # CIRCUMFLEX ACCENT
+    0x1B28:	0x007B,  # LEFT CURLY BRACKET
+    0x1B29:	0x007D,  # RIGHT CURLY BRACKET
+    0x1B2F:	0x005C,  # REVERSE SOLIDUS
+    0x1B3C:	0x005B,  # LEFT SQUARE BRACKET
+    0x1B3D:	0x007E,  # TILDE
+    0x1B3E:	0x005D,  # RIGHT SQUARE BRACKET
+    0x1B40:	0x007C,  # VERTICAL LINE
+    0x1B65:	0x20AC,  # EURO SIGN
 })
-
-# 0x1B0A	0x000C	#	FORM FEED
-# 0x1B14	0x005E	#	CIRCUMFLEX ACCENT
-# 0x1B28	0x007B	#	LEFT CURLY BRACKET
-# 0x1B29	0x007D	#	RIGHT CURLY BRACKET
-# 0x1B2F	0x005C	#	REVERSE SOLIDUS
-# 0x1B3C	0x005B	#	LEFT SQUARE BRACKET
-# 0x1B3D	0x007E	#	TILDE
-# 0x1B3E	0x005D	#	RIGHT SQUARE BRACKET
-# 0x1B40	0x007C	#	VERTICAL LINE
-# 0x1B65	0x20AC	#	EURO SIGN
 
 
 # 0x41	0x0391	#	GREEK CAPITAL LETTER ALPHA
@@ -128,3 +144,5 @@ encoding_map = codecs.make_encoding_map(decoding_map)
 encoding_map.update({
     0x0024: 0x02,  # TODO check why this is needed
 })
+
+# encoding_map_extension = codecs.make_encoding_map(decoding_map)
