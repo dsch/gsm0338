@@ -140,9 +140,5 @@ decoding_map.update({
 # 0x59	0x03A5	#	GREEK CAPITAL LETTER UPSILON
 # 0x5A	0x0396	#	GREEK CAPITAL LETTER ZETA
 
-encoding_map = codecs.make_encoding_map(decoding_map)
-encoding_map.update({
-    0x0024: 0x02,  # TODO check why this is needed
-})
 
-# encoding_map_extension = codecs.make_encoding_map(decoding_map)
+encoding_map = codecs.make_encoding_map(decoding_map)
