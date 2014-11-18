@@ -21,7 +21,6 @@ class Codec(codecs.Codec):
         num = 0
         for c in input:
             num |= ord(c)
-            print num
             if num == 0x1b:
                 num <<= 8
                 continue
