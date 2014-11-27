@@ -2,15 +2,26 @@ import codecs
 
 __all__ = ["Codec"]
 
+from six import unichr
+
 # Codec APIs
 
 
 class Codec(codecs.Codec):
+    """
+    Stateless encoder and decoder for GSM 03.38
+    """
 
     def encode(self, input, errors='strict'):
-        buffer = ""
+        """
+        Encode string to byte array
+        :param input: string (unicode) object to convert to byte array
+        :param errors: defines the error handling to apply
+        :return: returns a tuple (output object, length consumed)
+        """
+        buffer = ''
         for c in input:
-            num = encoding_map[ord(c)]
+            num = _ENCODING_MAP[ord(c)]
             if num & 0xff00:
                 buffer += '\x1b'
             buffer += chr(num & 0xff)
@@ -19,13 +30,13 @@ class Codec(codecs.Codec):
     def decode(self, input, errors='strict'):
         buffer = u""
         num = 0
-        for c in input:
-            num |= ord(c)
+        for x in input:
+            num |= ord(x)
             if num == 0x1b:
                 num <<= 8
                 continue
 
-            buffer += unichr(decoding_map[num])
+            buffer += unichr(_DECODING_MAP[num])
             num = 0
         return (buffer, len(buffer))
 
@@ -33,20 +44,26 @@ class Codec(codecs.Codec):
 class IncrementalEncoder(codecs.IncrementalEncoder):
 
     def encode(self, input, final=False):
-        return codecs.charmap_encode(input, self.errors, encoding_map)[0]
+        return codecs.charmap_encode(input, self.errors, _ENCODING_MAP)[0]
 
 
 class IncrementalDecoder(codecs.IncrementalDecoder):
 
     def decode(self, input, final=False):
-        return codecs.charmap_decode(input, self.errors, decoding_map)[0]
+        return codecs.charmap_decode(input, self.errors, _DECODING_MAP)[0]
 
 
 class StreamWriter(Codec, codecs.StreamWriter):
+    """
+    StreamWriter: for GSM 03.38 codec
+    """
     pass
 
 
 class StreamReader(Codec, codecs.StreamReader):
+    """
+    StreamReader: for GSM 03.38 codec
+    """
     pass
 
 
@@ -63,8 +80,8 @@ def getregentry():
     )
 
 
-decoding_map = codecs.make_identity_dict(range(127))
-decoding_map.update({
+_DECODING_MAP = codecs.make_identity_dict(range(127))
+_DECODING_MAP.update({
     0x00: 0x0040,  # COMMERCIAL AT
     # (0x00, 0x0000), #NULL (see note above)
     0x01: 0x00A3,  # POUND SIGN
@@ -140,4 +157,4 @@ decoding_map.update({
 # 0x5A	0x0396	#	GREEK CAPITAL LETTER ZETA
 
 
-encoding_map = codecs.make_encoding_map(decoding_map)
+_ENCODING_MAP = codecs.make_encoding_map(_DECODING_MAP)
