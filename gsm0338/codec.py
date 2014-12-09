@@ -9,6 +9,7 @@ class Codec(codecs.Codec):
     Stateless encoder and decoder for GSM 03.38
     """
 
+    NAME = 'gsm0338'
     _ESCAPE = 0x1b
 
     def encode(self, input, errors='strict'):
@@ -22,7 +23,11 @@ class Codec(codecs.Codec):
         consumed = 0
         for c in input:
             consumed += 1
-            num = _ENCODING_MAP[ord(c)]
+            try:
+                num = _ENCODING_MAP[ord(c)]
+            except KeyError as ex:
+                raise ValueError("'%s' codec can't encode character %r in position %d" %
+                                (self.NAME, c, consumed - 1))
             if num & 0xff00:
                 buffer += int2byte(self._ESCAPE)
             buffer += int2byte(num & 0xff)
@@ -45,8 +50,15 @@ class Codec(codecs.Codec):
             if num == self._ESCAPE:
                 num <<= 8
                 continue
-
-            buffer += unichr(_DECODING_MAP[num])
+            try:
+                buffer += unichr(_DECODING_MAP[num])
+            except KeyError as ex:
+                if num & (self._ESCAPE << 8):
+                    raise ValueError("'%s' codec can't decode byte 0x%x in position %d" %
+                                     (self.NAME, ex.args[0] & 0xff, consumed -1))
+                else:
+                    raise ValueError("'%s' codec can't decode byte 0x%x in position %d" %
+                                     (self.NAME, ex.args[0], consumed - 1))
             num = 0
         return buffer, consumed
 

@@ -10,7 +10,7 @@ def find_gsm0338(encoding):
     Return codec info for 'gsm0338'
     :param encoding: name of the searched encoding
     """
-    if encoding == 'gsm0338':
+    if encoding == Codec.NAME:
         return get_codec_info()
     return None
 
