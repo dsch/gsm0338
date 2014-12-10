@@ -23,17 +23,21 @@ class Codec(codecs.Codec):
         consumed = 0
         for c in input:
             consumed += 1
+            num = None
             try:
                 num = _ENCODING_MAP[ord(c)]
             except KeyError as ex:
                 if errors == 'replace':
                     num = 0x3f
+                elif errors == 'ignore':
+                    pass
                 else:
                     raise ValueError("'%s' codec can't encode character %r in position %d" %
                                     (self.NAME, c, consumed - 1))
-            if num & 0xff00:
-                buffer += int2byte(self._ESCAPE)
-            buffer += int2byte(num & 0xff)
+            if num is not None:
+                if num & 0xff00:
+                    buffer += int2byte(self._ESCAPE)
+                buffer += int2byte(num & 0xff)
         return buffer, consumed
 
     def decode(self, input, errors='strict'):
@@ -58,6 +62,8 @@ class Codec(codecs.Codec):
             except KeyError as ex:
                 if errors == 'replace':
                     buffer += u'\ufffd'
+                elif errors == 'ignore':
+                    pass
                 else:
                     if num & (self._ESCAPE << 8):
                         raise ValueError("'%s' codec can't decode byte 0x%x in position %d" %
@@ -115,7 +121,6 @@ def get_codec_info():
 _DECODING_MAP = codecs.make_identity_dict(range(127))
 _DECODING_MAP.update({
     0x00: 0x0040,  # COMMERCIAL AT
-    # (0x00, 0x0000), #NULL (see note above)
     0x01: 0x00A3,  # POUND SIGN
     0x02: 0x0024,  # DOLLAR SIGN
     0x03: 0x00A5,  # YEN SIGN
@@ -125,7 +130,7 @@ _DECODING_MAP.update({
     0x07: 0x00EC,  # LATIN SMALL LETTER I WITH GRAVE
     0x08: 0x00F2,  # LATIN SMALL LETTER O WITH GRAVE
     #0x09: 0x00E7,  # LATIN SMALL LETTER C WITH CEDILLA
-    0x09: 0x00C7, #LATIN CAPITAL LETTER C WITH CEDILLA (see note above)
+    0x09: 0x00C7,  # LATIN CAPITAL LETTER C WITH CEDILLA
     0x0B: 0x00D8,  # LATIN CAPITAL LETTER O WITH STROKE
     0x0C: 0x00F8,  # LATIN SMALL LETTER O WITH STROKE
     0x0E: 0x00C5,  # LATIN CAPITAL LETTER A WITH RING ABOVE
@@ -141,8 +146,7 @@ _DECODING_MAP.update({
     0x18: 0x03A3,  # GREEK CAPITAL LETTER SIGMA
     0x19: 0x0398,  # GREEK CAPITAL LETTER THETA
     0x1A: 0x039E,  # GREEK CAPITAL LETTER XI
-    # ESCAPE TO EXTENSION TABLE (or displayed as NBSP, see note above)
-    # 0x1B: 0x00A0,
+    # 0x1B: 0x00A0, # ESCAPE TO EXTENSION TABLE (or displayed as NBSP)
     0x1C: 0x00C6,  # LATIN CAPITAL LETTER AE
     0x1D: 0x00E6,  # LATIN SMALL LETTER AE
     0x1E: 0x00DF,  # LATIN SMALL LETTER SHARP S (German)
@@ -173,20 +177,20 @@ _DECODING_MAP.update({
 })
 
 
-# 0x41	0x0391	#	GREEK CAPITAL LETTER ALPHA
-# 0x42	0x0392	#	GREEK CAPITAL LETTER BETA
-# 0x45	0x0395	#	GREEK CAPITAL LETTER EPSILON
-# 0x48	0x0397	#	GREEK CAPITAL LETTER ETA
-# 0x49	0x0399	#	GREEK CAPITAL LETTER IOTA
-# 0x4B	0x039A	#	GREEK CAPITAL LETTER KAPPA
-# 0x4D	0x039C	#	GREEK CAPITAL LETTER MU
-# 0x4E	0x039D	#	GREEK CAPITAL LETTER NU
-# 0x4F	0x039F	#	GREEK CAPITAL LETTER OMICRON
-# 0x50	0x03A1	#	GREEK CAPITAL LETTER RHO
-# 0x54	0x03A4	#	GREEK CAPITAL LETTER TAU
-# 0x58	0x03A7	#	GREEK CAPITAL LETTER CHI
-# 0x59	0x03A5	#	GREEK CAPITAL LETTER UPSILON
-# 0x5A	0x0396	#	GREEK CAPITAL LETTER ZETA
+# 0x41: 0x0391  # GREEK CAPITAL LETTER ALPHA
+# 0x42: 0x0392  # GREEK CAPITAL LETTER BETA
+# 0x45: 0x0395  # GREEK CAPITAL LETTER EPSILON
+# 0x48: 0x0397  # GREEK CAPITAL LETTER ETA
+# 0x49: 0x0399  # GREEK CAPITAL LETTER IOTA
+# 0x4B: 0x039A  # GREEK CAPITAL LETTER KAPPA
+# 0x4D: 0x039C  # GREEK CAPITAL LETTER MU
+# 0x4E: 0x039D  # GREEK CAPITAL LETTER NU
+# 0x4F: 0x039F  # GREEK CAPITAL LETTER OMICRON
+# 0x50: 0x03A1  # GREEK CAPITAL LETTER RHO
+# 0x54: 0x03A4  # GREEK CAPITAL LETTER TAU
+# 0x58: 0x03A7  # GREEK CAPITAL LETTER CHI
+# 0x59: 0x03A5  # GREEK CAPITAL LETTER UPSILON
+# 0x5A: 0x0396  # GREEK CAPITAL LETTER ZETA
 
 
 _ENCODING_MAP = codecs.make_encoding_map(_DECODING_MAP)

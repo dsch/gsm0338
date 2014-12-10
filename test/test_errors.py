@@ -37,3 +37,12 @@ def test_decode_replace(codec):
 
 def test_encode_replace(codec):
     assert codec.encode(u'ab°c', errors='replace') == (b'ab\x3fc', 4)
+
+
+def test_decode_ignore(codec):
+    assert codec.decode(b'ab\x8ad\x1b\x8ae', errors='ignore') \
+        == (u"abde", 7)
+
+
+def test_encode_ignore(codec):
+    assert codec.encode(u'ab°c', errors='ignore') == (b'abc', 4)
