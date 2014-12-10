@@ -26,8 +26,11 @@ class Codec(codecs.Codec):
             try:
                 num = _ENCODING_MAP[ord(c)]
             except KeyError as ex:
-                raise ValueError("'%s' codec can't encode character %r in position %d" %
-                                (self.NAME, c, consumed - 1))
+                if errors == 'replace':
+                    num = 0x3f
+                else:
+                    raise ValueError("'%s' codec can't encode character %r in position %d" %
+                                    (self.NAME, c, consumed - 1))
             if num & 0xff00:
                 buffer += int2byte(self._ESCAPE)
             buffer += int2byte(num & 0xff)
@@ -53,12 +56,15 @@ class Codec(codecs.Codec):
             try:
                 buffer += unichr(_DECODING_MAP[num])
             except KeyError as ex:
-                if num & (self._ESCAPE << 8):
-                    raise ValueError("'%s' codec can't decode byte 0x%x in position %d" %
-                                     (self.NAME, ex.args[0] & 0xff, consumed -1))
+                if errors == 'replace':
+                    buffer += u'\ufffd'
                 else:
-                    raise ValueError("'%s' codec can't decode byte 0x%x in position %d" %
-                                     (self.NAME, ex.args[0], consumed - 1))
+                    if num & (self._ESCAPE << 8):
+                        raise ValueError("'%s' codec can't decode byte 0x%x in position %d" %
+                                         (self.NAME, ex.args[0] & 0xff, consumed -1))
+                    else:
+                        raise ValueError("'%s' codec can't decode byte 0x%x in position %d" %
+                                         (self.NAME, ex.args[0], consumed - 1))
             num = 0
         return buffer, consumed
 
