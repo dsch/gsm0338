@@ -19,7 +19,7 @@ class Codec(codecs.Codec):
         :param errors: defines the error handling to apply
         :return: returns a tuple (output object, length consumed)
         """
-        buffer = b''
+        encode_buffer = b''
         consumed = 0
         for c in input:
             consumed += 1
@@ -33,12 +33,12 @@ class Codec(codecs.Codec):
                     pass
                 else:
                     raise ValueError("'%s' codec can't encode character %r in position %d" %
-                                    (self.NAME, c, consumed - 1))
+                                     (self.NAME, c, consumed - 1))
             if num is not None:
                 if num & 0xff00:
-                    buffer += int2byte(self._ESCAPE)
-                buffer += int2byte(num & 0xff)
-        return buffer, consumed
+                    encode_buffer += int2byte(self._ESCAPE)
+                encode_buffer += int2byte(num & 0xff)
+        return encode_buffer, consumed
 
     def decode(self, input, errors='strict'):
         """
@@ -47,32 +47,32 @@ class Codec(codecs.Codec):
         :param errors: defines the error handling to apply
         :return: returns a tuple (output object, length consumed)
         """
-        buffer = u""
+        decode_buffer = u""
         consumed = 0
 
         num = 0
-        for x in input:
+        for value in input:
             consumed += 1
-            num |= byte2int([x])
+            num |= byte2int([value])
             if num == self._ESCAPE:
                 num <<= 8
                 continue
             try:
-                buffer += unichr(_DECODING_MAP[num])
+                decode_buffer += unichr(_DECODING_MAP[num])
             except KeyError as ex:
                 if errors == 'replace':
-                    buffer += u'\ufffd'
+                    decode_buffer += u'\ufffd'
                 elif errors == 'ignore':
                     pass
                 else:
                     if num & (self._ESCAPE << 8):
                         raise ValueError("'%s' codec can't decode byte 0x%x in position %d" %
-                                         (self.NAME, ex.args[0] & 0xff, consumed -1))
+                                         (self.NAME, ex.args[0] & 0xff, consumed - 1))
                     else:
                         raise ValueError("'%s' codec can't decode byte 0x%x in position %d" %
                                          (self.NAME, ex.args[0], consumed - 1))
             num = 0
-        return buffer, consumed
+        return decode_buffer, consumed
 
 
 class IncrementalEncoder(codecs.IncrementalEncoder):
@@ -129,7 +129,7 @@ _DECODING_MAP.update({
     0x06: 0x00F9,  # LATIN SMALL LETTER U WITH GRAVE
     0x07: 0x00EC,  # LATIN SMALL LETTER I WITH GRAVE
     0x08: 0x00F2,  # LATIN SMALL LETTER O WITH GRAVE
-    #0x09: 0x00E7,  # LATIN SMALL LETTER C WITH CEDILLA
+    # 0x09: 0x00E7,  # LATIN SMALL LETTER C WITH CEDILLA
     0x09: 0x00C7,  # LATIN CAPITAL LETTER C WITH CEDILLA
     0x0B: 0x00D8,  # LATIN CAPITAL LETTER O WITH STROKE
     0x0C: 0x00F8,  # LATIN SMALL LETTER O WITH STROKE
@@ -146,7 +146,7 @@ _DECODING_MAP.update({
     0x18: 0x03A3,  # GREEK CAPITAL LETTER SIGMA
     0x19: 0x0398,  # GREEK CAPITAL LETTER THETA
     0x1A: 0x039E,  # GREEK CAPITAL LETTER XI
-    # 0x1B: 0x00A0, # ESCAPE TO EXTENSION TABLE (or displayed as NBSP)
+    # 0x1B: 0x00A0,  # ESCAPE TO EXTENSION TABLE (or displayed as NBSP)
     0x1C: 0x00C6,  # LATIN CAPITAL LETTER AE
     0x1D: 0x00E6,  # LATIN SMALL LETTER AE
     0x1E: 0x00DF,  # LATIN SMALL LETTER SHARP S (German)
