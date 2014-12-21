@@ -1,9 +1,6 @@
 # coding: utf-8
 
-import pytest
 import gsm0338
-
-import codecs
 
 
 def find_gsm0338(encoding):
@@ -12,9 +9,6 @@ def find_gsm0338(encoding):
     if encoding == 'gsm0338':
         return gsm0338.getregentry()
     return None
-
-
-codecs.register(find_gsm0338)
 
 
 def test_register_encoder():
