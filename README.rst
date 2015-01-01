@@ -17,9 +17,6 @@ Decode GSM 03.38 encoded bytes:
 
 Mapping source
 --------------
-`GSM 03.38 to Unicode`_
+`3GPP TS 23.038 version 12.0.0 Release 12`_
 
-**Exception:** Uppercase C-cedilla glyph at 0x09 as in ETSI GSM standard  
-
-
-.. _GSM 03.38 to Unicode: ftp://ftp.unicode.org/Public/MAPPINGS/ETSI/GSM0338.TXT
+.. _3GPP TS 23.038 version 12.0.0 Release 12: http://www.etsi.org/deliver/etsi_ts/123000_123099/123038/12.00.00_60/ts_123038v120000p.pdf
