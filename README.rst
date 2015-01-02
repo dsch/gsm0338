@@ -3,7 +3,7 @@ gsm0338
 .. image:: https://travis-ci.org/dsch/gsm0338.svg?branch=master
     :target: https://travis-ci.org/dsch/gsm0338
 
-Python Codec for ETSI GSM 03.38
+Python Codec for 3GPP TS 23.038 / ETSI GSM 03.38
 
 
 Example

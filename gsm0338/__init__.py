@@ -3,6 +3,7 @@ __all__ = ["Codec"]
 
 import codecs
 from .codec import Codec, get_codec_info
+from .charset import SINGLE_SHIFT_CHARACTER_SET_SPANISH
 
 
 def find_gsm0338(encoding):
