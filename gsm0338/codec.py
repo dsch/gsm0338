@@ -20,10 +20,9 @@ class Codec(codecs.Codec):
             single_shift_decode_map = BASIC_CHARACTER_SET_EXTENSION
 
         self._decode_map = locking_shift_decode_map
-        self._decode_map.update({
-            (self._ESCAPE << 8 | key): value for (key, value) in
-            single_shift_decode_map.items()
-        })
+        self._decode_map.update(
+            dict(((self._ESCAPE << 8 | key), value)
+                 for (key, value) in single_shift_decode_map.items()))
 
         self._encoding_map = codecs.make_encoding_map(self._decode_map)
 
