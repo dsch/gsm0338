@@ -138,6 +138,6 @@ def find_gsm0338(encoding):
     Return codec info for 'gsm03.38'
     :param encoding: name of the searched encoding
     """
-    if encoding.casefold() == Codec.NAME:
+    if encoding.lower() == Codec.NAME:
         return get_codec_info()
     return None
