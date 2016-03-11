@@ -12,21 +12,21 @@ def codec():
 def test_decode_strict_basic(codec):
     with pytest.raises(ValueError) as exec_info:
         codec.decode(b'ab\x8Ad', errors='strict')
-    assert "'gsm0338' codec can't decode byte 0x8a in position 2" \
+    assert "'gsm03.38' codec can't decode byte 0x8a in position 2" \
         == str(exec_info.value)
 
 
 def test_decode_strict_extension(codec):
     with pytest.raises(ValueError) as exec_info:
         codec.decode(b'ab\x1b\x8ad', errors='strict')
-    assert "'gsm0338' codec can't decode byte 0x8a in position 3" \
+    assert "'gsm03.38' codec can't decode byte 0x8a in position 3" \
         == str(exec_info.value)
 
 
 def test_encode_strict(codec):
     with pytest.raises(ValueError) as exec_info:
         codec.encode(u'ab°c', errors='strict')
-    assert "'gsm0338' codec can't encode character %r in position 2" % u'°' \
+    assert "'gsm03.38' codec can't encode character %r in position 2" % u'°' \
         == str(exec_info.value)
 
 

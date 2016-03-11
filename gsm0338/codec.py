@@ -10,7 +10,7 @@ class Codec(codecs.Codec):
     Stateless encoder and decoder for GSM 03.38
     """
 
-    NAME = 'gsm0338'
+    NAME = 'gsm03.38'
     _ESCAPE = 0x1b
 
     def __init__(self, locking_shift_decode_map=None, single_shift_decode_map=None):
@@ -120,10 +120,10 @@ class StreamReader(Codec, codecs.StreamReader):
 def get_codec_info():
     """
     encodings module API
-    :return: CodecInfo for gsm0338 codec
+    :return: CodecInfo for gsm03.38 codec
     """
     return codecs.CodecInfo(
-        name='gsm03.38',
+        name=Codec.NAME,
         encode=Codec().encode,
         decode=Codec().decode,
         incrementalencoder=IncrementalEncoder,
@@ -131,3 +131,13 @@ def get_codec_info():
         streamwriter=StreamWriter,
         streamreader=StreamReader,
     )
+
+
+def find_gsm0338(encoding):
+    """
+    Return codec info for 'gsm03.38'
+    :param encoding: name of the searched encoding
+    """
+    if encoding.casefold() == Codec.NAME:
+        return get_codec_info()
+    return None
