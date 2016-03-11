@@ -47,7 +47,7 @@ setup(
 
     # metadata for upload to PyPI
     author='David Schneider',
-    author_email='david.schneider@postmail.ch',
+    author_email='schneidav81@gmail.com',
     license='MIT',
     url='https://github.com/dsch/gsm0338',
     classifiers=[
@@ -59,6 +59,7 @@ setup(
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
         'Topic :: Software Development :: Libraries',
     ],
     )
