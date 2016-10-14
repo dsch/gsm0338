@@ -1,5 +1,5 @@
 import codecs
-from six import unichr, byte2int, int2byte
+from six import byte2int, int2byte, unichr
 from .charset import BASIC_CHARACTER_SET, BASIC_CHARACTER_SET_EXTENSION
 
 # Codec APIs
@@ -25,7 +25,6 @@ class Codec(codecs.Codec):
                  for (key, value) in single_shift_decode_map.items()))
 
         self._encoding_map = codecs.make_encoding_map(self._decode_map)
-
 
     def encode(self, input, errors='strict'):
         """

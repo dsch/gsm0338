@@ -1,7 +1,7 @@
 # coding: utf-8
 
-import gsm0338
 import codecs
+import gsm0338
 
 
 def test_register_encoder():
