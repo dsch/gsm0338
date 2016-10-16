@@ -1,8 +1,8 @@
-from setuptools import setup, find_packages
-from setuptools.command.test import test as TestCommand
 from codecs import open
 from os import path
 import sys
+from setuptools import find_packages, setup
+from setuptools.command.test import test as TestCommand
 
 here = path.abspath(path.dirname(__file__))
 
@@ -22,7 +22,7 @@ class PyTest(TestCommand):
         self.test_suite = True
 
     def run_tests(self):
-        #import here, cause outside the eggs aren't loaded
+        # import here, cause outside the eggs aren't loaded
         import pytest
         errno = pytest.main(self.test_args)
         sys.exit(errno)
@@ -37,7 +37,7 @@ setup(
     install_requires=['six'],
     package_data={
         '': ['*.txt', '*.rst'],
-        },
+    },
 
     tests_require=[
         'pytest',
@@ -62,4 +62,4 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Topic :: Software Development :: Libraries',
     ],
-    )
+)

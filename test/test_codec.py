@@ -1,7 +1,7 @@
 # coding: utf-8
 
-import pytest
 import gsm0338
+import pytest
 from six import int2byte
 
 
