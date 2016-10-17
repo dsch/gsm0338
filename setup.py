@@ -29,7 +29,7 @@ class PyTest(TestCommand):
 
 setup(
     name='gsm0338',
-    version='1.0a1',
+    version='1.0.0',
     description='GSM 03.38 codec',
     long_description=long_description,
 
@@ -51,7 +51,7 @@ setup(
     license='MIT',
     url='https://github.com/dsch/gsm0338',
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
