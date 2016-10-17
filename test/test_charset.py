@@ -12,4 +12,4 @@ def test_encode_spanish_single_shift():
         single_shift_decode_map=gsm0338.SINGLE_SHIFT_CHARACTER_SET_SPANISH
     )
     assert codec.encode(unicode_spanish_single_shift) == \
-           (gsm_spanish_single_shift, len(unicode_spanish_single_shift))
+        (gsm_spanish_single_shift, len(unicode_spanish_single_shift))

@@ -16,8 +16,8 @@ class PyTest(TestCommand):
     def finalize_options(self):
         TestCommand.finalize_options(self)
         self.test_args = [
-            'test',
-            '--pep8',
+            'py.test',
+            '--flake8',
         ]
         self.test_suite = True
 
@@ -41,7 +41,7 @@ setup(
 
     tests_require=[
         'pytest',
-        'pytest-pep8',
+        'pytest-flake8',
     ],
     cmdclass={'test': PyTest},
 
