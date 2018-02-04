@@ -1,6 +1,9 @@
 import codecs
+
 from six import byte2int, int2byte, unichr
+
 from .charset import BASIC_CHARACTER_SET, BASIC_CHARACTER_SET_EXTENSION
+
 
 # Codec APIs
 

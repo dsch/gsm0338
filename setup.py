@@ -1,6 +1,7 @@
+import sys
 from codecs import open
 from os import path
-import sys
+
 from setuptools import find_packages, setup
 from setuptools.command.test import test as TestCommand
 
@@ -26,6 +27,7 @@ class PyTest(TestCommand):
         import pytest
         errno = pytest.main(self.test_args)
         sys.exit(errno)
+
 
 setup(
     name='gsm0338',
