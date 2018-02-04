@@ -29,9 +29,10 @@ class Codec(codecs.Codec):
     def encode(self, input, errors='strict'):
         """
         Encode string to byte array
-        :param input: string (unicode) object to convert to byte array
-        :param errors: defines the error handling to apply
+        :param str input: string (unicode) object to convert to byte array
+        :param str errors: defines the error handling to apply
         :return: returns a tuple (output object, length consumed)
+        :rtype: (bytes,int)
         """
         encode_buffer = b''
         consumed = 0
@@ -57,9 +58,10 @@ class Codec(codecs.Codec):
     def decode(self, input, errors='strict'):
         """
         Decode byte array to string
-        :param input: byte array to convert to unicode string
-        :param errors: defines the error handling to apply
+        :param bytes input: byte array to convert to unicode string
+        :param str errors: defines the error handling to apply
         :return: returns a tuple (output object, length consumed)
+        :rtype: (str,int)
         """
         decode_buffer = u""
         consumed = 0
@@ -120,6 +122,7 @@ def get_codec_info():
     """
     encodings module API
     :return: CodecInfo for gsm03.38 codec
+    :rtype: CodecInfo
     """
     return codecs.CodecInfo(
         name=Codec.NAME,
@@ -135,7 +138,8 @@ def get_codec_info():
 def find_gsm0338(encoding):
     """
     Return codec info for 'gsm03.38'
-    :param encoding: name of the searched encoding
+    :param str encoding: name of the searched encoding
+    :rtype: CodecInfo
     """
     if encoding.lower() == Codec.NAME:
         return get_codec_info()
