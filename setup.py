@@ -38,7 +38,7 @@ setup(
     packages=find_packages(),
     install_requires=['six'],
     package_data={
-        '': ['*.txt', '*.rst'],
+        '': ['*.rst'],
     },
 
     tests_require=[
