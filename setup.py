@@ -36,12 +36,13 @@ setup(
     long_description=long_description,
 
     packages=find_packages(),
-    install_requires=['six'],
+    install_requires=[],
     package_data={
         '': ['*.rst'],
     },
 
     tests_require=[
+        'six',
         'pytest',
         'pytest-flake8',
     ],
