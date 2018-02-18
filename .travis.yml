@@ -6,8 +6,8 @@ python:
   - "3.5"
   - "3.6"
 install:
-  - pip install tox-travis
+  - pip install tox-travis codecov
 script:
   - tox
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - codecov
