@@ -1,20 +1,25 @@
 import codecs
+import unicodedata
 
-from six import byte2int, int2byte, unichr
+from six import byte2int, int2byte
 
 from .charset import BASIC_CHARACTER_SET, BASIC_CHARACTER_SET_EXTENSION
 
 
 # Codec APIs
-
-
 class Codec(codecs.Codec):
     """
     Stateless encoder and decoder for GSM 03.38
     """
 
     NAME = 'gsm03.38'
-    _ESCAPE = 0x1b
+    __ESCAPE = 0x1b
+    __UNICODE_LOOKUP_FALLBACK = {
+        'LINE-FEED': u'\x0A',
+        'FORM FEED': u'\x0C',
+        'CARRIAGE RETURN': u'\x0D',
+        'ESCAPE': u'\x1B',
+    }
 
     def __init__(self, locking_shift_decode_map=None, single_shift_decode_map=None):
         if locking_shift_decode_map is None:
@@ -22,12 +27,21 @@ class Codec(codecs.Codec):
         if single_shift_decode_map is None:
             single_shift_decode_map = BASIC_CHARACTER_SET_EXTENSION
 
-        self._decode_map = locking_shift_decode_map
+        self._decode_map = dict(
+            [(key, self.__unicode_lookup(name)) for key, name in locking_shift_decode_map.items()])
         self._decode_map.update(
-            dict(((self._ESCAPE << 8 | key), value)
-                 for (key, value) in single_shift_decode_map.items()))
+            dict(((self.__ESCAPE << 8 | key), self.__unicode_lookup(name))
+                 for key, name in single_shift_decode_map.items()))
 
         self._encoding_map = codecs.make_encoding_map(self._decode_map)
+
+    @staticmethod
+    def __unicode_lookup(name):
+        try:
+            return unicodedata.lookup(name)
+        except KeyError:
+            # this error handling is only used for python 2.7
+            return Codec.__UNICODE_LOOKUP_FALLBACK[name]
 
     def encode(self, input, errors='strict'):
         """
@@ -43,10 +57,10 @@ class Codec(codecs.Codec):
             consumed += 1
             num = None
             try:
-                num = self._encoding_map[ord(character)]
+                num = self._encoding_map[character]
             except KeyError:
                 if errors == 'replace':
-                    num = 0x3f
+                    num = 0x3f  # question mark
                 elif errors == 'ignore':
                     pass
                 else:
@@ -54,7 +68,7 @@ class Codec(codecs.Codec):
                                      (self.NAME, character, consumed - 1))
             if num is not None:
                 if num & 0xff00:
-                    encode_buffer += int2byte(self._ESCAPE)
+                    encode_buffer += int2byte(self.__ESCAPE)
                 encode_buffer += int2byte(num & 0xff)
         return encode_buffer, consumed
 
@@ -73,18 +87,18 @@ class Codec(codecs.Codec):
         for value in input:
             consumed += 1
             num |= byte2int([value])
-            if num == self._ESCAPE:
+            if num == self.__ESCAPE:
                 num <<= 8
                 continue
             try:
-                decode_buffer += unichr(self._decode_map[num])
+                decode_buffer += self._decode_map[num]
             except KeyError as ex:
                 if errors == 'replace':
                     decode_buffer += u'\ufffd'
                 elif errors == 'ignore':
                     pass
                 else:
-                    if num & (self._ESCAPE << 8):
+                    if num & (self.__ESCAPE << 8):
                         raise ValueError("'%s' codec can't decode byte 0x%x in position %d" %
                                          (self.NAME, ex.args[0] & 0xff, consumed - 1))
                     else:
