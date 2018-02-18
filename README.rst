@@ -1,7 +1,13 @@
 gsm0338
 =======
+.. image:: http://img.shields.io/pypi/v/six.svg
+   :target: https://pypi.python.org/pypi/gsm0338
+
 .. image:: https://travis-ci.org/dsch/gsm0338.svg?branch=master
     :target: https://travis-ci.org/dsch/gsm0338
+
+.. image:: http://img.shields.io/badge/license-MIT-green.svg
+   :target: https://github.com/dsch/gsm0338/blob/master/LICENSE
 
 Python Codec for 3GPP TS 23.038 / ETSI GSM 03.38
 
