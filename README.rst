@@ -1,6 +1,6 @@
 gsm0338
 =======
-.. image:: http://img.shields.io/pypi/v/six.svg
+.. image:: http://img.shields.io/pypi/v/gsm0338.svg
    :target: https://pypi.python.org/pypi/gsm0338
 
 .. image:: https://travis-ci.org/dsch/gsm0338.svg?branch=master
