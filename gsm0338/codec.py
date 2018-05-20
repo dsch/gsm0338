@@ -14,7 +14,7 @@ class Codec(codecs.Codec):
     NAME = 'gsm03.38'
     __ESCAPE = 0x1b
 
-    def __init__(self, locking_shift_decode_map=None, single_shift_decode_map=None):
+    def __init__(self, locking_shift_decode_map=BASIC_CHARACTER_SET, single_shift_decode_map=BASIC_CHARACTER_SET_EXTENSION):
         if sys.version_info[0] < 3:
             self.__int2byte = chr
             self.__byte2int = ord
@@ -23,11 +23,6 @@ class Codec(codecs.Codec):
             self.__int2byte = lambda i: bytes((i,))
             self.__byte2int = lambda i: i
             self.__unicode_lookup = unicodedata.lookup
-
-        if locking_shift_decode_map is None:
-            locking_shift_decode_map = BASIC_CHARACTER_SET
-        if single_shift_decode_map is None:
-            single_shift_decode_map = BASIC_CHARACTER_SET_EXTENSION
 
         self._decode_map = dict(
             [(key, self.__unicode_lookup(name)) for key, name in locking_shift_decode_map.items()])
@@ -63,7 +58,8 @@ class Codec(codecs.Codec):
         error_handler = None  # cache for error handler
         encode_buffer = b''
         pos = 0
-        while pos < len(input):
+        input_length = len(input)
+        while pos < input_length:
             try:
                 encode_buffer += self.__encode_character(input[pos])
                 pos += 1
@@ -99,7 +95,8 @@ class Codec(codecs.Codec):
         start_pos = 0
         next_pos = 0
         num = 0
-        while next_pos < len(input):
+        input_length = len(input)
+        while next_pos < input_length:
             try:
                 num |= self.__byte2int(input[next_pos])
                 next_pos += 1
