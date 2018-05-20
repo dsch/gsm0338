@@ -59,26 +59,30 @@ class Codec(codecs.Codec):
         :return: returns a tuple (output object, length consumed)
         :rtype: (bytes,int)
         """
+
+        error_handler = None  # cache for error handler
         encode_buffer = b''
-        consumed = 0
-        for character in input:
-            consumed += 1
-            num = None
+        pos = 0
+        while pos < len(input):
             try:
-                num = self._encoding_map[character]
+                encode_buffer += self.__encode_character(input[pos])
+                pos += 1
             except KeyError:
-                if errors == 'replace':
-                    num = 0x3f  # question mark
-                elif errors == 'ignore':
-                    pass
-                else:
-                    raise ValueError("'%s' codec can't encode character %r in position %d" %
-                                     (self.NAME, character, consumed - 1))
-            if num is not None:
-                if num & 0xff00:
-                    encode_buffer += self.__int2byte(self.__ESCAPE)
-                encode_buffer += self.__int2byte(num & 0xff)
-        return encode_buffer, consumed
+                if error_handler is None:
+                    error_handler = codecs.lookup_error(errors)
+                encode_error = UnicodeEncodeError(self.NAME, input, pos, pos + 1, 'character not mapped')
+                replacement, pos = error_handler(encode_error)
+                if replacement:
+                    encode_buffer += self.__encode_character(replacement[0])
+        return encode_buffer, pos
+
+    def __encode_character(self, character):
+        append_buffer = b''
+        num = self._encoding_map[character]
+        if num & 0xff00:
+            append_buffer += self.__int2byte(self.__ESCAPE)
+        append_buffer += self.__int2byte(num & 0xff)
+        return append_buffer
 
     def decode(self, input, errors='strict'):
         """
@@ -88,32 +92,31 @@ class Codec(codecs.Codec):
         :return: returns a tuple (output object, length consumed)
         :rtype: (str,int)
         """
-        decode_buffer = u""
-        consumed = 0
 
+        error_handler = None  # cache for error handler
+        decode_buffer = u""
+
+        start_pos = 0
+        next_pos = 0
         num = 0
-        for value in input:
-            consumed += 1
-            num |= self.__byte2int(value)
-            if num == self.__ESCAPE:
-                num <<= 8
-                continue
+        while next_pos < len(input):
             try:
+                num |= self.__byte2int(input[next_pos])
+                next_pos += 1
+                if num == self.__ESCAPE:
+                    num <<= 8
+                    continue
                 decode_buffer += self._decode_map[num]
-            except KeyError as ex:
-                if errors == 'replace':
-                    decode_buffer += u'\ufffd'
-                elif errors == 'ignore':
-                    pass
-                else:
-                    if num & (self.__ESCAPE << 8):
-                        raise ValueError("'%s' codec can't decode byte 0x%x in position %d" %
-                                         (self.NAME, ex.args[0] & 0xff, consumed - 1))
-                    else:
-                        raise ValueError("'%s' codec can't decode byte 0x%x in position %d" %
-                                         (self.NAME, ex.args[0], consumed - 1))
+            except KeyError:
+                if error_handler is None:
+                    error_handler = codecs.lookup_error(errors)
+                encode_error = UnicodeDecodeError(self.NAME, input, start_pos, next_pos, 'invalid sequence')
+                replacement, next_pos = error_handler(encode_error)
+                if replacement:
+                    decode_buffer += replacement
+            start_pos = next_pos
             num = 0
-        return decode_buffer, consumed
+        return decode_buffer, next_pos
 
 
 class IncrementalEncoder(codecs.IncrementalEncoder):
