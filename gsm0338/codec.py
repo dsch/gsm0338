@@ -14,7 +14,8 @@ class Codec(codecs.Codec):
     NAME = 'gsm03.38'
     __ESCAPE = 0x1b
 
-    def __init__(self, locking_shift_decode_map=BASIC_CHARACTER_SET, single_shift_decode_map=BASIC_CHARACTER_SET_EXTENSION):
+    def __init__(self, locking_shift_decode_map=BASIC_CHARACTER_SET,
+                 single_shift_decode_map=BASIC_CHARACTER_SET_EXTENSION):
         if sys.version_info[0] < 3:
             self.__int2byte = chr
             self.__byte2int = ord
