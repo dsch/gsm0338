@@ -6,7 +6,7 @@ gsm0338
 .. image:: https://travis-ci.org/dsch/gsm0338.svg?branch=master
     :target: https://travis-ci.org/dsch/gsm0338
 
-.. image:: https://codecov.io/gh/dsch/gms0338/branch/master/graphs/badge.svg
+.. image:: https://codecov.io/gh/dsch/gsm0338/branch/master/graphs/badge.svg
     :target: https://codecov.io/gh/dsch/gsm0338/branch/master
 
 .. image:: http://img.shields.io/badge/license-MIT-green.svg
