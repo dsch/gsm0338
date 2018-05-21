@@ -1,12 +1,23 @@
+sudo: false
 language: python
+cache: pip
 python:
-  - "2.7"
-  - "3.4"
-  - "3.5"
-  - "3.6"
+  - 2.7
+  - 3.4
+  - 3.5
+  - 3.6
+  - pypy
+env:
+  TOXENV=py
+
+before_install:
+  - pyenv versions
+
 install:
-  - pip install tox-travis codecov
+  - pip install tox
+
 script:
   - tox
+
 after_success:
-  - codecov
+  - tox -e coverage,codecov

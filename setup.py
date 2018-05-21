@@ -1,52 +1,25 @@
-import sys
 from codecs import open
-from os import path
 
-from setuptools import find_packages, setup
-from setuptools.command.test import test as TestCommand
+from setuptools import setup
 
-here = path.abspath(path.dirname(__file__))
 
 # Get the long description from the relevant file
-with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
-    long_description = f.read()
-
-
-class PyTest(TestCommand):
-
-    def finalize_options(self):
-        TestCommand.finalize_options(self)
-        self.test_args = [
-            'py.test',
-            '--flake8',
-        ]
-        self.test_suite = True
-
-    def run_tests(self):
-        # import here, cause outside the eggs aren't loaded
-        import pytest
-        errno = pytest.main(self.test_args)
-        sys.exit(errno)
+def get_long_description():
+    with open('README.rst', encoding='utf-8') as f:
+        return f.read()
 
 
 setup(
     name='gsm0338',
     version='1.1.0',
     description='GSM 03.38 codec',
-    long_description=long_description,
+    long_description=get_long_description(),
 
-    packages=find_packages(),
-    install_requires=[],
-    package_data={
-        '': ['*.rst'],
+    packages=['gsm0338'],
+
+    extras_require={
+        "testing": ['six', 'pytest', 'pytest-cov', 'pytest-flake8', 'pytest-timeout'],
     },
-
-    tests_require=[
-        'six',
-        'pytest',
-        'pytest-flake8',
-    ],
-    cmdclass={'test': PyTest},
 
     # metadata for upload to PyPI
     author='David Schneider',
@@ -58,6 +31,8 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
