@@ -1,5 +1,6 @@
 # coding: utf-8
 
+import codecs
 import sys
 
 import pytest
@@ -39,7 +40,7 @@ def test_decode_replace(codec):
 
 
 def test_encode_replace(codec):
-    assert codec.encode(u'ab°c', errors='replace') == (b'ab\x3fc', 4)
+    assert codec.encode(u'ab°c', errors='replace') == (b'ab?c', 4)
 
 
 def test_decode_ignore(codec):
@@ -49,3 +50,27 @@ def test_decode_ignore(codec):
 
 def test_encode_ignore(codec):
     assert codec.encode(u'ab°c', errors='ignore') == (b'abc', 4)
+
+
+def test_encode_replace_multi_str(codec):
+    def test_replace_error(exception):
+        return '?!', exception.end
+
+    codecs.register_error('test_replace', test_replace_error)
+    assert codec.encode(u'ab°c', errors='test_replace') == (b'ab?!c', 4)
+
+
+def test_encode_replace_byte(codec):
+    def test_replace_error(exception):
+        return b'?', exception.end
+
+    codecs.register_error('test_replace', test_replace_error)
+    assert codec.encode(u'ab°c', errors='test_replace') == (b'ab?c', 4)
+
+
+def test_encode_replace_bytes(codec):
+    def test_replace_error(exception):
+        return b'?!', exception.end
+
+    codecs.register_error('test_replace', test_replace_error)
+    assert codec.encode(u'ab°c', errors='test_replace') == (b'ab?!c', 4)

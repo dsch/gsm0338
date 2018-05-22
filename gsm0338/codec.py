@@ -70,8 +70,10 @@ class Codec(codecs.Codec):
                     error_handler = codecs.lookup_error(errors)
                 encode_error = UnicodeEncodeError(self.NAME, input, pos, pos + 1, 'character not mapped')
                 replacement, pos = error_handler(encode_error)
-                if replacement:
-                    encode_buffer += self.__encode_character(replacement[0])
+                if isinstance(replacement, str):
+                    encode_buffer += b''.join([self.__encode_character(c) for c in replacement])
+                else:
+                    encode_buffer += replacement
         return encode_buffer, pos
 
     def __encode_character(self, character):
