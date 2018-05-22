@@ -47,6 +47,7 @@ class Codec(codecs.Codec):
             }
             return unicode_lookup_fallback[name]
 
+    # noinspection PyShadowingBuiltins
     def encode(self, input, errors='strict'):
         """
         Encode string to byte array
@@ -81,6 +82,7 @@ class Codec(codecs.Codec):
         append_buffer += self.__int2byte(num & 0xff)
         return append_buffer
 
+    # noinspection PyShadowingBuiltins
     def decode(self, input, errors='strict'):
         """
         Decode byte array to string
@@ -116,15 +118,35 @@ class Codec(codecs.Codec):
             num = 0
         return decode_buffer, next_pos
 
+    # encodings module API
+    @classmethod
+    def get_codec_info(cls):
+        """
+        encodings module API
+        :return: CodecInfo for gsm03.38 codec
+        :rtype: CodecInfo
+        """
+        return codecs.CodecInfo(
+            name=cls.NAME,
+            encode=cls().encode,
+            decode=cls().decode,
+            incrementalencoder=IncrementalEncoder,
+            incrementaldecoder=IncrementalDecoder,
+            streamwriter=StreamWriter,
+            streamreader=StreamReader,
+        )
+
 
 class IncrementalEncoder(codecs.IncrementalEncoder):
 
+    # noinspection PyShadowingBuiltins
     def encode(self, input, final=False):
         return codecs.charmap_encode(input, self.errors, self._encoding_map)[0]
 
 
 class IncrementalDecoder(codecs.IncrementalDecoder):
 
+    # noinspection PyShadowingBuiltins
     def decode(self, input, final=False):
         return codecs.charmap_decode(input, self.errors, self._decode_map)[0]
 
@@ -143,24 +165,7 @@ class StreamReader(Codec, codecs.StreamReader):
     pass
 
 
-# encodings module API
-def get_codec_info():
-    """
-    encodings module API
-    :return: CodecInfo for gsm03.38 codec
-    :rtype: CodecInfo
-    """
-    return codecs.CodecInfo(
-        name=Codec.NAME,
-        encode=Codec().encode,
-        decode=Codec().decode,
-        incrementalencoder=IncrementalEncoder,
-        incrementaldecoder=IncrementalDecoder,
-        streamwriter=StreamWriter,
-        streamreader=StreamReader,
-    )
-
-
+@codecs.register
 def find_gsm0338(encoding):
     """
     Return codec info for 'gsm03.38'
@@ -168,5 +173,4 @@ def find_gsm0338(encoding):
     :rtype: CodecInfo
     """
     if encoding.lower() == Codec.NAME:
-        return get_codec_info()
-    return None
+        return Codec.get_codec_info()
