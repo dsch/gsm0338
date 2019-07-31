@@ -174,5 +174,6 @@ def find_gsm0338(encoding):
     :param str encoding: name of the searched encoding
     :rtype: CodecInfo
     """
-    if encoding.lower() == Codec.NAME:
+    encoding = ''.join(c for c in encoding.lower() if c not in ('.', ' ', '-'))
+    if encoding in ['gsm0338', 'gsm7', '3gpp23038']:
         return Codec.get_codec_info()
