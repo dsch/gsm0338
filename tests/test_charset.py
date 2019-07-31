@@ -4,7 +4,7 @@ import gsm0338
 
 
 def test_encode_spanish_single_shift():
-    unicode_spanish_single_shift = u'ç\u000A^{}\[~]|ÁÍÓÚá€íóú'
+    unicode_spanish_single_shift = u'ç\u000A^{}\\[~]|ÁÍÓÚá€íóú'
     gsm_spanish_single_shift = b'\x1B\x09\x0A\x1B\x14\x1B\x28\x1B\x29' \
                                b'\x1B\x2F\x1B\x3C\x1B\x3D\x1B\x3E\x1B\x40' \
                                b'\x1B\x41\x1B\x49\x1B\x4F\x1B\x55\x1B\x61' \
