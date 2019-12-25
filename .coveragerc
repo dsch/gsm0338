@@ -1,0 +1,13 @@
+# Test coverage configuration.
+# Usage:
+#   pip install coverage
+#   coverage erase  # clears previous data if any
+#   coverage run -m pytest
+#   coverage report  # prints to stdout
+#   coverage html  # creates ./htmlcov/*.html including annotated source
+[run]
+branch = True
+source = gsm0338
+
+[report]
+show_missing = True

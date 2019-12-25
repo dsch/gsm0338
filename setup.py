@@ -14,12 +14,9 @@ setup(
     version='1.1.0',
     description='GSM 03.38 codec',
     long_description=get_long_description(),
+    long_description_content_type='text/x-rst',
 
     packages=['gsm0338'],
-
-    extras_require={
-        "testing": ['six', 'pytest', 'pytest-cov', 'pytest-flake8', 'pytest-timeout'],
-    },
 
     # metadata for upload to PyPI
     author='David Schneider',
@@ -40,4 +37,12 @@ setup(
         'Programming Language :: Python :: 3.8',
         'Topic :: Software Development :: Libraries',
     ],
+
+    # This field corresponds to the "Project-URL" metadata fields:
+    # https://packaging.python.org/specifications/core-metadata/#project-url-multiple-use
+    project_urls={
+        'Bug Reports': 'https://github.com/dsch/gsm0338/issues',
+        'Source': 'https://github.com/dsch/gsm0338',
+        'Continuous Integration': 'https://travis-ci.org/dsch/gsm0338',
+    },
 )

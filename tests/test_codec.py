@@ -35,8 +35,7 @@ def test_decode_extended(codec):
 
 
 def test_decode_basic_character_set(codec):
-    assert codec.decode(GSM_BASIC_CHARACTER_SET) == \
-           (UNICODE_BASIC_CHARACTER_SET, len(GSM_BASIC_CHARACTER_SET))
+    assert codec.decode(GSM_BASIC_CHARACTER_SET) == (UNICODE_BASIC_CHARACTER_SET, len(GSM_BASIC_CHARACTER_SET))
 
 
 def test_encode_alpha(codec):
@@ -52,5 +51,4 @@ def test_encode_extended(codec):
 
 
 def test_encode_basic_character_set(codec):
-    assert codec.encode(UNICODE_BASIC_CHARACTER_SET) == \
-           (GSM_BASIC_CHARACTER_SET, len(UNICODE_BASIC_CHARACTER_SET))
+    assert codec.encode(UNICODE_BASIC_CHARACTER_SET) == (GSM_BASIC_CHARACTER_SET, len(UNICODE_BASIC_CHARACTER_SET))

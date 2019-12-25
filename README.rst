@@ -45,3 +45,10 @@ Mapping source
 
 3GPP TS 23.038 Rel-14: Alphabets and language-specific information
 http://www.3gpp.org/dynareport/23038.htm
+
+Development
+-----------
+Usefull development dependecies are listed in  `requirements.txt <requirements.txt>`_.
+To install this packages in our current envirionment:
+
+    pip install -r requirements.txt

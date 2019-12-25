@@ -35,8 +35,7 @@ def test_encode_strict(codec):
 
 
 def test_decode_replace(codec):
-    assert codec.decode(b'ab\x8ad\x1b\x8ae', errors='replace') \
-           == (u"ab\ufffdd\ufffde", 7)
+    assert codec.decode(b'ab\x8ad\x1b\x8ae', errors='replace') == (u"ab\ufffdd\ufffde", 7)
 
 
 def test_encode_replace(codec):
@@ -44,8 +43,7 @@ def test_encode_replace(codec):
 
 
 def test_decode_ignore(codec):
-    assert codec.decode(b'ab\x8ad\x1b\x8ae', errors='ignore') \
-           == (u"abde", 7)
+    assert codec.decode(b'ab\x8ad\x1b\x8ae', errors='ignore') == (u"abde", 7)
 
 
 def test_encode_ignore(codec):
