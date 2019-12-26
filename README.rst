@@ -14,6 +14,8 @@ gsm0338
 
 Python Codec for 3GPP TS 23.038 / ETSI GSM 03.38
 
+.. note:: This codec doesn't cover character packing as in chapter 6.1.2 of the GSM standard.
+          The byte array has already to be split into octets.
 
 Examples
 --------
@@ -38,17 +40,17 @@ With loading the module the codec get's automatically registered.
 
 Mapping source
 --------------
-`3GPP TS 23.038 version 14.0.0 Release 14`_
+`3GPP TS 23.038 version 15.0.0 Release 15`_
 
-.. _3GPP TS 23.038 version 14.0.0 Release 14: http://www.etsi.org/deliver/etsi_ts/123000_123099/123038/14.00.00_60/ts_123038v140000p.pdf
+.. _3GPP TS 23.038 version 15.0.0 Release 15: https://www.etsi.org/deliver/etsi_ts/123000_123099/123038/15.00.00_60/ts_123038v150000p.pdf
 
 
-3GPP TS 23.038 Rel-14: Alphabets and language-specific information
+3GPP TS 23.038 Rel-15: Alphabets and language-specific information
 http://www.3gpp.org/dynareport/23038.htm
 
 Development
 -----------
-Usefull development dependecies are listed in  `requirements.txt <requirements.txt>`_.
-To install this packages in our current envirionment:
+Useful development dependencies are listed in  `requirements.txt <requirements.txt>`_.
+To install this packages in our current environment:
 
     pip install -r requirements.txt
