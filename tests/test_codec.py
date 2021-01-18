@@ -1,7 +1,6 @@
 # coding: utf-8
 
 import pytest
-from six import int2byte
 
 import gsm0338
 
@@ -11,8 +10,8 @@ def codec():
     return gsm0338.Codec()
 
 
-GSM_BASIC_CHARACTER_SET = b"".join([int2byte(x) for x in range(27)]) + \
-                          b"".join([int2byte(x) for x in range(28, 128)]) + \
+GSM_BASIC_CHARACTER_SET = bytes(range(27)) + \
+                          bytes(range(28, 128)) + \
                           b"\x1B\x0A\x1B\x14\x1B\x28\x1B\x29\x1B\x2F" \
                           b"\x1B\x3C\x1B\x3D\x1B\x3E\x1B\x40\x1B\x65"
 UNICODE_BASIC_CHARACTER_SET = u"@£$¥èéùìòÇ\nØø\rÅåΔ_ΦΓΛΩΠΨΣΘΞÆæßÉ" \
