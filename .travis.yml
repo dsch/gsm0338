@@ -1,4 +1,4 @@
-dist: bionic
+dist: focal
 
 language: python
 cache: pip
@@ -11,25 +11,20 @@ stages:
 jobs:
   include:
     - stage: check
-      python: 3.8
+      python: 3.9
       env: TOXENV=lint
-    - stage: test
-      python: 2.7
-      env: TOXENV=py27
-    - python: 3.5
-      env: TOXENV=py35
     - python: 3.6
       env: TOXENV=py36
     - python: 3.7
       env: TOXENV=py37
     - python: 3.8
       env: TOXENV=py38
-    - python: pypy2
-      env: TOXENV=pypy2
+    - python: 3.9
+      env: TOXENV=py39
     - python: pypy3
       env: TOXENV=pypy3
     - stage: coverage
-      python: 3.8
+      python: 3.9
       env: TOXENV=coverage,codecov
 
 install: pip install tox

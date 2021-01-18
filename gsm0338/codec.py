@@ -1,5 +1,4 @@
 import codecs
-import sys
 import unicodedata
 
 from .charset import BASIC_CHARACTER_SET, BASIC_CHARACTER_SET_EXTENSION
@@ -16,19 +15,10 @@ class Codec(codecs.Codec):
 
     def __init__(self, locking_shift_decode_map=BASIC_CHARACTER_SET,
                  single_shift_decode_map=BASIC_CHARACTER_SET_EXTENSION):
-        if sys.version_info[0] < 3:
-            self.__int2byte = chr
-            self.__byte2int = ord
-            self.__unicode_lookup = Codec.__unicode_lookup27
-        else:
-            self.__int2byte = lambda i: bytes((i,))
-            self.__byte2int = lambda i: i
-            self.__unicode_lookup = unicodedata.lookup
-
         self._decode_map = dict(
-            [(key, self.__unicode_lookup(name)) for key, name in locking_shift_decode_map.items()])
+            [(key, unicodedata.lookup(name)) for key, name in locking_shift_decode_map.items()])
         self._decode_map.update(
-            dict(((self.__ESCAPE << 8 | key), self.__unicode_lookup(name))
+            dict(((self.__ESCAPE << 8 | key), unicodedata.lookup(name))
                  for key, name in single_shift_decode_map.items()))
 
         self._encoding_map = codecs.make_encoding_map(self._decode_map)
@@ -80,8 +70,8 @@ class Codec(codecs.Codec):
         append_buffer = b''
         num = self._encoding_map[character]
         if num & 0xff00:
-            append_buffer += self.__int2byte(self.__ESCAPE)
-        append_buffer += self.__int2byte(num & 0xff)
+            append_buffer += bytes((self.__ESCAPE,))
+        append_buffer += bytes((num & 0xff,))
         return append_buffer
 
     # noinspection PyShadowingBuiltins
@@ -103,7 +93,7 @@ class Codec(codecs.Codec):
         input_length = len(input)
         while next_pos < input_length:
             try:
-                num |= self.__byte2int(input[next_pos])
+                num |= input[next_pos]
                 next_pos += 1
                 if num == self.__ESCAPE:
                     num <<= 8
