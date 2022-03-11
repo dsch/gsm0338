@@ -50,7 +50,6 @@ http://www.3gpp.org/dynareport/23038.htm
 
 Development
 -----------
-Useful development dependencies are listed in  `requirements.txt <requirements.txt>`_.
-To install this packages in our current environment:
+Use `Poetry <https://python-poetry.org/>`_ to install project dependencies.
 
-    pip install -r requirements.txt
+    poetry install
