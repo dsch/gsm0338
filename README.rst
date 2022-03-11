@@ -3,8 +3,8 @@ gsm0338
 .. image:: http://img.shields.io/pypi/v/gsm0338.svg
    :target: https://pypi.python.org/pypi/gsm0338
 
-.. image:: https://travis-ci.org/dsch/gsm0338.svg?branch=master
-    :target: https://travis-ci.org/dsch/gsm0338
+.. image:: https://travis-ci.com/dsch/gsm0338.svg?branch=master
+    :target: https://travis-ci.com/dsch/gsm0338
 
 .. image:: https://codecov.io/gh/dsch/gsm0338/branch/master/graphs/badge.svg
     :target: https://codecov.io/gh/dsch/gsm0338/branch/master

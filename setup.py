@@ -41,6 +41,6 @@ setup(
     project_urls={
         'Bug Reports': 'https://github.com/dsch/gsm0338/issues',
         'Source': 'https://github.com/dsch/gsm0338',
-        'Continuous Integration': 'https://travis-ci.org/dsch/gsm0338',
+        'Continuous Integration': 'https://travis-ci.com/dsch/gsm0338',
     },
 )
