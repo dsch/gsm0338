@@ -12,6 +12,10 @@ gsm0338
 .. image:: http://img.shields.io/badge/license-MIT-green.svg
    :target: https://github.com/dsch/gsm0338/blob/master/LICENSE
 
+.. image:: https://results.pre-commit.ci/badge/github/dsch/gsm0338/master.svg
+   :target: https://results.pre-commit.ci/latest/github/dsch/gsm0338/master
+   :alt: pre-commit.ci status
+
 Python Codec for 3GPP TS 23.038 / ETSI GSM 03.38
 
 .. note:: This codec doesn't cover character packing as in chapter 6.1.2 of the GSM standard.
