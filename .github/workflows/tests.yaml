@@ -11,7 +11,7 @@ jobs:
   unittests:
     runs-on: ubuntu-latest
     strategy:
-      python-version: [ "3.6", "3.7", "3.8", "3.9", "3.10" ]
+      python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
       fail-fast: false
     defaults:
       run:
@@ -27,4 +27,4 @@ jobs:
       - name: Install dependencies
         run: python -m poetry install
       - name: Test with pytest
-            run: python -m poetry run pytest -v tests
+        run: python -m poetry run pytest -v tests
