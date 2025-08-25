@@ -15,60 +15,70 @@ def codec():
 
 def test_decode_strict_basic(codec):
     with pytest.raises(ValueError) as exec_info:
-        codec.decode(b'ab\x8Ad', errors='strict')
-    assert "'gsm03.38' codec can't decode byte 0x8a in position 2: invalid sequence" \
-           == str(exec_info.value)
+        codec.decode(b"ab\x8ad", errors="strict")
+    assert (
+        "'gsm03.38' codec can't decode byte 0x8a in position 2: invalid sequence"
+        == str(exec_info.value)
+    )
 
 
 def test_decode_strict_extension(codec):
     with pytest.raises(ValueError) as exec_info:
-        codec.decode(b'ab\x1b\x8ad', errors='strict')
-    assert "'gsm03.38' codec can't decode bytes in position 2-3: invalid sequence" \
-           == str(exec_info.value)
+        codec.decode(b"ab\x1b\x8ad", errors="strict")
+    assert (
+        "'gsm03.38' codec can't decode bytes in position 2-3: invalid sequence"
+        == str(exec_info.value)
+    )
 
 
 def test_encode_strict(codec):
     with pytest.raises(ValueError) as exec_info:
-        codec.encode(u'ab°c', errors='strict')
-    assert "'gsm03.38' codec can't encode character %s'\\x%x' in position 2: character not mapped" % (
-        'u' if sys.version_info[0] < 3 else '', 0xB0) == str(exec_info.value)
+        codec.encode("ab°c", errors="strict")
+    assert (
+        "'gsm03.38' codec can't encode character %s'\\x%x' in position 2: character not mapped"
+        % ("u" if sys.version_info[0] < 3 else "", 0xB0)
+        == str(exec_info.value)
+    )
 
 
 def test_decode_replace(codec):
-    assert codec.decode(b'ab\x8ad\x1b\x8ae', errors='replace') == (u"ab\ufffdd\ufffde", 7)
+    assert codec.decode(b"ab\x8ad\x1b\x8ae", errors="replace") == (
+        "ab\ufffdd\ufffde",
+        7,
+    )
 
 
 def test_encode_replace(codec):
-    assert codec.encode(u'ab°c', errors='replace') == (b'ab?c', 4)
+    assert codec.encode("ab°c", errors="replace") == (b"ab?c", 4)
 
 
 def test_decode_ignore(codec):
-    assert codec.decode(b'ab\x8ad\x1b\x8ae', errors='ignore') == (u"abde", 7)
+    assert codec.decode(b"ab\x8ad\x1b\x8ae", errors="ignore") == ("abde", 7)
 
 
 def test_encode_ignore(codec):
-    assert codec.encode(u'ab°c', errors='ignore') == (b'abc', 4)
+    assert codec.encode("ab°c", errors="ignore") == (b"abc", 4)
 
 
 def test_encode_replace_multi_str(codec):
     def test_replace_error(exception):
-        return '?!', exception.end
+        return "?!", exception.end
 
-    codecs.register_error('test_replace', test_replace_error)
-    assert codec.encode(u'ab°c', errors='test_replace') == (b'ab?!c', 4)
+    codecs.register_error("test_replace", test_replace_error)
+    assert codec.encode("ab°c", errors="test_replace") == (b"ab?!c", 4)
 
 
 def test_encode_replace_byte(codec):
     def test_replace_error(exception):
-        return b'?', exception.end
+        return b"?", exception.end
 
-    codecs.register_error('test_replace', test_replace_error)
-    assert codec.encode(u'ab°c', errors='test_replace') == (b'ab?c', 4)
+    codecs.register_error("test_replace", test_replace_error)
+    assert codec.encode("ab°c", errors="test_replace") == (b"ab?c", 4)
 
 
 def test_encode_replace_bytes(codec):
     def test_replace_error(exception):
-        return b'?!', exception.end
+        return b"?!", exception.end
 
-    codecs.register_error('test_replace', test_replace_error)
-    assert codec.encode(u'ab°c', errors='test_replace') == (b'ab?!c', 4)
+    codecs.register_error("test_replace", test_replace_error)
+    assert codec.encode("ab°c", errors="test_replace") == (b"ab?!c", 4)
