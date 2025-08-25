@@ -10,16 +10,26 @@ class Codec(codecs.Codec):
     Stateless encoder and decoder for GSM 03.38
     """
 
-    NAME = 'gsm03.38'
-    __ESCAPE = 0x1b
+    NAME = "gsm03.38"
+    __ESCAPE = 0x1B
 
-    def __init__(self, locking_shift_decode_map=BASIC_CHARACTER_SET,
-                 single_shift_decode_map=BASIC_CHARACTER_SET_EXTENSION):
+    def __init__(
+        self,
+        locking_shift_decode_map=BASIC_CHARACTER_SET,
+        single_shift_decode_map=BASIC_CHARACTER_SET_EXTENSION,
+    ):
         self._decode_map = dict(
-            [(key, unicodedata.lookup(name)) for key, name in locking_shift_decode_map.items()])
+            [
+                (key, unicodedata.lookup(name))
+                for key, name in locking_shift_decode_map.items()
+            ]
+        )
         self._decode_map.update(
-            dict(((self.__ESCAPE << 8 | key), unicodedata.lookup(name))
-                 for key, name in single_shift_decode_map.items()))
+            dict(
+                ((self.__ESCAPE << 8 | key), unicodedata.lookup(name))
+                for key, name in single_shift_decode_map.items()
+            )
+        )
 
         self._encoding_map = codecs.make_encoding_map(self._decode_map)
 
@@ -30,15 +40,15 @@ class Codec(codecs.Codec):
             return unicodedata.lookup(name)
         except KeyError:
             unicode_lookup_fallback = {
-                'LINE FEED': u'\x0A',
-                'FORM FEED': u'\x0C',
-                'CARRIAGE RETURN': u'\x0D',
-                'ESCAPE': u'\x1B',
+                "LINE FEED": "\x0a",
+                "FORM FEED": "\x0c",
+                "CARRIAGE RETURN": "\x0d",
+                "ESCAPE": "\x1b",
             }
             return unicode_lookup_fallback[name]
 
     # noinspection PyShadowingBuiltins
-    def encode(self, input, errors='strict'):
+    def encode(self, input, errors="strict"):
         """
         Encode string to byte array
         :param str input: string (unicode) object to convert to byte array
@@ -48,7 +58,7 @@ class Codec(codecs.Codec):
         """
 
         error_handler = None  # cache for error handler
-        encode_buffer = b''
+        encode_buffer = b""
         pos = 0
         input_length = len(input)
         while pos < input_length:
@@ -58,24 +68,28 @@ class Codec(codecs.Codec):
             except KeyError:
                 if error_handler is None:
                     error_handler = codecs.lookup_error(errors)
-                encode_error = UnicodeEncodeError(self.NAME, input, pos, pos + 1, 'character not mapped')
+                encode_error = UnicodeEncodeError(
+                    self.NAME, input, pos, pos + 1, "character not mapped"
+                )
                 replacement, pos = error_handler(encode_error)
                 if isinstance(replacement, str):
-                    encode_buffer += b''.join([self.__encode_character(c) for c in replacement])
+                    encode_buffer += b"".join(
+                        [self.__encode_character(c) for c in replacement]
+                    )
                 else:
                     encode_buffer += replacement
         return encode_buffer, pos
 
     def __encode_character(self, character):
-        append_buffer = b''
+        append_buffer = b""
         num = self._encoding_map[character]
-        if num & 0xff00:
+        if num & 0xFF00:
             append_buffer += bytes((self.__ESCAPE,))
-        append_buffer += bytes((num & 0xff,))
+        append_buffer += bytes((num & 0xFF,))
         return append_buffer
 
     # noinspection PyShadowingBuiltins
-    def decode(self, input, errors='strict'):
+    def decode(self, input, errors="strict"):
         """
         Decode byte array to string
         :param bytes input: byte array to convert to unicode string
@@ -85,7 +99,7 @@ class Codec(codecs.Codec):
         """
 
         error_handler = None  # cache for error handler
-        decode_buffer = u""
+        decode_buffer = ""
 
         start_pos = 0
         next_pos = 0
@@ -102,7 +116,9 @@ class Codec(codecs.Codec):
             except KeyError:
                 if error_handler is None:
                     error_handler = codecs.lookup_error(errors)
-                encode_error = UnicodeDecodeError(self.NAME, input, start_pos, next_pos, 'invalid sequence')
+                encode_error = UnicodeDecodeError(
+                    self.NAME, input, start_pos, next_pos, "invalid sequence"
+                )
                 replacement, next_pos = error_handler(encode_error)
                 if replacement:
                     decode_buffer += replacement
@@ -130,14 +146,12 @@ class Codec(codecs.Codec):
 
 
 class IncrementalEncoder(codecs.IncrementalEncoder):
-
     # noinspection PyShadowingBuiltins
     def encode(self, input, final=False):
         return codecs.charmap_encode(input, self.errors, self._encoding_map)[0]
 
 
 class IncrementalDecoder(codecs.IncrementalDecoder):
-
     # noinspection PyShadowingBuiltins
     def decode(self, input, final=False):
         return codecs.charmap_decode(input, self.errors, self._decode_map)[0]
@@ -147,6 +161,7 @@ class StreamWriter(Codec, codecs.StreamWriter):
     """
     StreamWriter: for GSM 03.38 codec
     """
+
     pass
 
 
@@ -154,6 +169,7 @@ class StreamReader(Codec, codecs.StreamReader):
     """
     StreamReader: for GSM 03.38 codec
     """
+
     pass
 
 
