@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "gsm0338"
-version = "1.1.0"
+version = "1.2.0"
 description = "GSM 03.38 codec"
 readme = "README.rst"
 authors = ["David Schneider <schneidav81@gmail.com>"]
