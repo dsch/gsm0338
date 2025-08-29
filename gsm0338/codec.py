@@ -33,20 +33,6 @@ class Codec(codecs.Codec):
 
         self._encoding_map = codecs.make_encoding_map(self._decode_map)
 
-    @staticmethod
-    def __unicode_lookup27(name):
-        """unicodedata lookup function only used for Python 2.7"""
-        try:
-            return unicodedata.lookup(name)
-        except KeyError:
-            unicode_lookup_fallback = {
-                "LINE FEED": "\x0a",
-                "FORM FEED": "\x0c",
-                "CARRIAGE RETURN": "\x0d",
-                "ESCAPE": "\x1b",
-            }
-            return unicode_lookup_fallback[name]
-
     # noinspection PyShadowingBuiltins
     def encode(self, input, errors="strict"):
         """
