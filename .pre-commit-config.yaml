@@ -11,3 +11,5 @@ repos:
     hooks:
       - id: ruff-check
       - id: ruff-format
+ci:
+    autoupdate_schedule: monthly
