@@ -10,11 +10,12 @@ classifiers = [
     'Development Status :: 5 - Production/Stable',
     'Intended Audience :: Developers',
     'Operating System :: OS Independent',
+    'Programming Language :: Python :: 3',
     'Topic :: Software Development :: Libraries',
 ]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.10"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.4.1"
