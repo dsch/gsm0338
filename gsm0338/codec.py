@@ -18,17 +18,15 @@ class Codec(codecs.Codec):
         locking_shift_decode_map=BASIC_CHARACTER_SET,
         single_shift_decode_map=BASIC_CHARACTER_SET_EXTENSION,
     ):
-        self._decode_map = dict(
-            [
-                (key, unicodedata.lookup(name))
-                for key, name in locking_shift_decode_map.items()
-            ]
-        )
+        self._decode_map = {
+            key: unicodedata.lookup(name)
+            for key, name in locking_shift_decode_map.items()
+        }
         self._decode_map.update(
-            dict(
-                ((self.__ESCAPE << 8 | key), unicodedata.lookup(name))
+            {
+                (self.__ESCAPE << 8 | key): unicodedata.lookup(name)
                 for key, name in single_shift_decode_map.items()
-            )
+            }
         )
 
         self._encoding_map = codecs.make_encoding_map(self._decode_map)
@@ -148,15 +146,11 @@ class StreamWriter(Codec, codecs.StreamWriter):
     StreamWriter: for GSM 03.38 codec
     """
 
-    pass
-
 
 class StreamReader(Codec, codecs.StreamReader):
     """
     StreamReader: for GSM 03.38 codec
     """
-
-    pass
 
 
 @codecs.register
