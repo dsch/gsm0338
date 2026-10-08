@@ -1,5 +1,3 @@
-# coding: utf-8
-
 import codecs
 import sys
 
@@ -35,8 +33,7 @@ def test_encode_strict(codec):
     with pytest.raises(ValueError) as exec_info:
         codec.encode("ab°c", errors="strict")
     assert (
-        "'gsm03.38' codec can't encode character %s'\\x%x' in position 2: character not mapped"
-        % ("u" if sys.version_info[0] < 3 else "", 0xB0)
+        f"'gsm03.38' codec can't encode character {'u' if sys.version_info[0] < 3 else ''}'\\x{0xB0:x}' in position 2: character not mapped"
         == str(exec_info.value)
     )
 

@@ -1,4 +1,3 @@
-# coding: utf-8
 """
 This example demonstrates how to use your own error handler to normalize characters based on unicode normalization
 """
